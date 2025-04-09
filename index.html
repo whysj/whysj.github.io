@@ -2,234 +2,161 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Birthday Puzzle Quest 🧩🎂</title>
+    <title>Happy Birthday, [Name]! 🎉</title>
     <style>
-        :root {
-            --primary: #ff69b4;
-            --secondary: #2a2a2a;
-        }
-
         body {
-            background: var(--secondary);
-            color: #fff;
-            font-family: 'Courier New', monospace;
-            margin: 0;
-            padding: 2rem;
+            background: #fff0f5;
+            font-family: 'Comic Sans MS', cursive;
+            text-align: center;
         }
 
-        .puzzle-stage {
-            display: none;
-            max-width: 800px;
-            margin: 2rem auto;
-            padding: 2rem;
-            border: 2px solid var(--primary);
-            border-radius: 10px;
-        }
-
-        .active-stage {
-            display: block;
-        }
-
-        .cypher-box {
-            background: #1a1a1a;
-            padding: 1rem;
-            margin: 1rem 0;
-            border-left: 3px solid var(--primary);
-        }
-
-        #jigsaw-container {
+        #game-container {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 5px;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
             max-width: 600px;
-            margin: 1rem auto;
+            margin: 2rem auto;
         }
 
-        .jigsaw-piece {
-            width: 100%;
-            height: 150px;
-            background-size: cover;
+        .memory-card {
+            width: 130px;
+            height: 130px;
+            background: #ff69b4;
+            border-radius: 10px;
             cursor: pointer;
-            opacity: 0.5;
-            transition: all 0.3s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 40px;
+            transform-style: preserve-3d;
+            transition: all 0.5s;
         }
 
-        .jigsaw-piece.correct {
-            opacity: 1;
-            border: 2px solid var(--primary);
+        .memory-card.flipped {
+            background: white;
+            transform: rotateY(180deg);
         }
 
-        #timer {
+        #cake {
+            font-size: 60px;
+            cursor: pointer;
+            animation: bounce 2s infinite;
+        }
+
+        .hidden-message {
+            display: none;
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(255,105,180,0.3);
+            margin: 2rem auto;
+            max-width: 500px;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .heart {
             position: fixed;
-            top: 1rem;
-            right: 1rem;
-            font-size: 1.5rem;
-            color: var(--primary);
+            font-size: 20px;
+            animation: float 3s linear forwards;
         }
 
-        .hint {
-            color: #888;
-            font-size: 0.9rem;
-            margin-top: 1rem;
+        @keyframes float {
+            0% { transform: translateY(100vh); }
+            100% { transform: translateY(-100vh); }
         }
     </style>
 </head>
 <body>
-    <div id="timer">⏳ 15:00</div>
-
-    <!-- Stage 0: Initial Cipher -->
-    <div class="puzzle-stage active-stage" id="stage0">
-        <h2>Stage 1: Memory Cipher</h2>
-        <div class="cypher-box">
-            <p>Uifsf jt zpvsf hjgu: V Hslg Rw pz Aol Ilhy... Fvb Jylclu?</p>
-            <small>Hint: Remember our first date month?</small>
-        </div>
-        <input type="text" id="cipherAnswer" placeholder="Decrypted message...">
-        <button onclick="checkCipher()">Submit</button>
-    </div>
-
-    <!-- Stage 1: Jigsaw Puzzle -->
-    <div class="puzzle-stage" id="stage1">
-        <h2>Stage 2: Rebuild Our Memory</h2>
-        <div id="jigsaw-container"></div>
-        <div class="hint">Arrange pieces chronologically</div>
-    </div>
-
-    <!-- Stage 2: Binary Puzzle -->
-    <div class="puzzle-stage" id="stage2">
-        <h2>Stage 3: Binary Heart</h2>
-        <pre id="binaryCode">
-01001000 01100001 01110000 01110000 01111001 
-01000010 01101001 01110010 01110100 01101000 
-01100100 01100001 01111001 00100001 00100000 
-01001101 01111001 00100000 01110011 01100101 
-01100011 01110010 01100101 01110100 00100000 
-01101001 01110011 00111010 00100000 00110001 
-00110001 00110001 00110001 00110001 00110001 
-        </pre>
-        <input type="number" id="binaryAnswer" placeholder="Decimal code...">
-        <button onclick="checkBinary()">Unlock</button>
-    </div>
-
-    <!-- Final Stage: Gift Reveal -->
-    <div class="puzzle-stage" id="finalStage">
-        <h1>🎉 Happy Birthday! 🎉</h1>
-        <p id="personalMessage"></p>
-        <div id="giftReveal"></div>
+    <h1>🎂 Happy Birthday, [Name]! 🎂</h1>
+    
+    <!-- Memory Game -->
+    <h2>Find all the matches to unlock your surprise!</h2>
+    <div id="game-container"></div>
+    
+    <!-- Birthday Cake -->
+    <div id="cake" onclick="revealMessage()">🎂</div>
+    
+    <!-- Hidden Message -->
+    <div id="hiddenMessage" class="hidden-message">
+        <h3>You did it! 🎉</h3>
+        <p>[Insert personal message here]</p>
+        <img src="[your-photo.jpg]" style="width:200px; border-radius:50%; margin:1rem">
     </div>
 
     <script>
-        // =============== CONFIGURATION =============== //
-        const CONFIG = {
-            // Puzzle 1: Caesar Cipher (offset by first date month)
-            CIPHER_OFFSET: 1, // Change to your first date month number
-            CIPHER_SOLUTION: "Your gift is... Check stage three! But first:",
+        // Customize these!
+        const EMOJI_PAIRS = ['🎁', '🎁', '💖', '💖', '🎈', '🎈', '🍰', '🍰'];
+        const PERSONAL_MESSAGE = "Happy birthday to the most amazing person I know! Thank you for being you. I love you more than [inside joke]! 🥰";
 
-            // Puzzle 2: Jigsaw pieces (chronological order)
-            JIGSAW_ORDER: [3, 1, 4, 2, 6, 5, 8, 7, 9], // Correct order indexes
-            IMAGE_URLS: [
-                "IMG_URL_1",  // Replace with actual image URLs
-                "IMG_URL_2",
-                // ... Add 7 more image URLs
-            ],
+        // Game Logic
+        let flippedCards = [];
+        let matchesFound = 0;
 
-            // Puzzle 3: Binary message
-            BINARY_SECRET: 11111, // Change to meaningful number
-            FINAL_MESSAGE: "Your real gift is... [INSERT REAL GIFT DETAILS]",
-            PERSONAL_NOTE: "Happy birthday my love! Thanks for solving my puzzles. You're my ultimate partner in crime. I love you! ❤️"
-        };
-
-        // =============== GAME STATE =============== //
-        let currentStage = 0;
-        let timeLeft = 900; // 15 minutes in seconds
-
-        // =============== PUZZLE LOGIC =============== //
-        // Stage 0: Caesar Cipher Decoder
-        function caesarDecrypt(text, shift) {
-            return text.replace(/[a-z]/gi, c => {
-                const base = c < 'a' ? 65 : 97;
-                return String.fromCharCode((c.charCodeAt(0) - base - shift + 26) % 26 + base);
+        function createGame() {
+            const shuffledEmojis = [...EMOJI_PAIRS].sort(() => Math.random() - 0.5);
+            
+            shuffledEmojis.forEach(emoji => {
+                const card = document.createElement('div');
+                card.className = 'memory-card';
+                card.innerHTML = emoji;
+                card.onclick = () => flipCard(card);
+                document.getElementById('game-container').appendChild(card);
             });
         }
 
-        function checkCipher() {
-            const answer = document.getElementById('cipherAnswer').value.toLowerCase();
-            const decrypted = caesarDecrypt("Uifsf jt zpvsf hjgu: V Hslg Rw pz Aol Ilhy... Fvb Jylclu?", CONFIG.CIPHER_OFFSET);
+        function flipCard(card) {
+            if (flippedCards.length < 2 && !card.classList.contains('flipped')) {
+                card.classList.add('flipped');
+                flippedCards.push(card);
+
+                if (flippedCards.length === 2) {
+                    setTimeout(checkMatch, 500);
+                }
+            }
+        }
+
+        function checkMatch() {
+            const [card1, card2] = flippedCards;
             
-            if(answer.includes("your gift")) {
-                loadStage(1);
-                initializeJigsaw();
+            if (card1.innerHTML === card2.innerHTML) {
+                matchesFound += 2;
+                if (matchesFound === EMOJI_PAIRS.length) {
+                    createHearts();
+                    setTimeout(() => alert("You won! Now click the cake! 🎂"), 500);
+                }
+            } else {
+                card1.classList.remove('flipped');
+                card2.classList.remove('flipped');
+            }
+            flippedCards = [];
+        }
+
+        // Surprise Message
+        function revealMessage() {
+            document.getElementById('hiddenMessage').style.display = 'block';
+            document.getElementById('cake').style.animation = 'none';
+            createHearts();
+        }
+
+        // Floating Hearts Animation
+        function createHearts() {
+            for(let i = 0; i < 50; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'heart';
+                heart.innerHTML = '💖';
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.animationDelay = Math.random() * 2 + 's';
+                document.body.appendChild(heart);
+                setTimeout(() => heart.remove(), 3000);
             }
         }
 
-        // Stage 1: Jigsaw Puzzle
-        function initializeJigsaw() {
-            const container = document.getElementById('jigsaw-container');
-            CONFIG.IMAGE_URLS.forEach((url, index) => {
-                const piece = document.createElement('div');
-                piece.className = 'jigsaw-piece';
-                piece.style.backgroundImage = `url(${url})`;
-                piece.dataset.index = index + 1;
-                piece.onclick = () => checkJigsawOrder(piece);
-                container.appendChild(piece);
-            });
-        }
-
-        function checkJigsawOrder(element) {
-            const currentIndex = Array.from(element.parentNode.children).indexOf(element);
-            const correctIndex = CONFIG.JIGSAW_ORDER[currentIndex] - 1;
-            
-            if(parseInt(element.dataset.index) === correctIndex) {
-                element.classList.add('correct');
-                checkJigsawComplete();
-            }
-        }
-
-        function checkJigsawComplete() {
-            const correct = document.querySelectorAll('.correct').length;
-            if(correct === 9) loadStage(2);
-        }
-
-        // Stage 2: Binary Decoder
-        function checkBinary() {
-            const answer = parseInt(document.getElementById('binaryAnswer').value);
-            if(answer === CONFIG.BINARY_SECRET) {
-                document.getElementById('personalMessage').textContent = CONFIG.PERSONAL_NOTE;
-                document.getElementById('giftReveal').innerHTML = `
-                    <h3>${CONFIG.FINAL_MESSAGE}</h3>
-                    <p>Your confirmation code: ${btoa("LoveYouForever")}</p>
-                `;
-                loadStage(3);
-            }
-        }
-
-        // =============== GAME CONTROLS =============== //
-        function loadStage(stageNumber) {
-            document.querySelector('.active-stage').classList.remove('active-stage');
-            document.getElementById(`stage${stageNumber}`).classList.add('active-stage');
-            currentStage = stageNumber;
-        }
-
-        // Timer system
-        setInterval(() => {
-            timeLeft--;
-            const minutes = Math.floor(timeLeft / 60);
-            const seconds = timeLeft % 60;
-            document.getElementById('timer').textContent = 
-                `⏳ ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-            
-            if(timeLeft <= 0) {
-                alert("Time's up! Refresh to try again ❤️");
-                location.reload();
-            }
-        }, 1000);
-
-        // Initialize security
-        const password = prompt("Enter birthday password:");
-        if(password !== "HER_NAME_123") { // Change password
-            alert("Invalid access! ❌");
-            window.close();
-        }
+        // Start the game
+        createGame();
     </script>
 </body>
 </html>

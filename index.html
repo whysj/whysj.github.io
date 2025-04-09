@@ -1,371 +1,184 @@
-<!-- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>From My Heart to Yours</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>Happy Birthday, [Name]! 💖</title>
     <style>
-        :root {
-            --primary-color: #ff3860;
-            --secondary-color: #ff758c;
-            --accent-color: #ff7eb9;
-            --text-color: #2d2d2d;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Playfair Display', serif;
-        }
-
         body {
-            background: linear-gradient(135deg, #fff5f7 0%, #fff1f5 100%);
-            color: var(--text-color);
-            line-height: 1.6;
+            background: #1a1a1a;
+            color: #fff;
+            font-family: 'Courier New', monospace;
             overflow-x: hidden;
-        }
-
-        .parallax {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .parallax::before {
-            content: '';
-            position: absolute;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(45deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-            transform: rotate(-15deg);
-            z-index: -1;
-            opacity: 0.1;
         }
 
         .container {
             max-width: 800px;
+            margin: 0 auto;
             padding: 2rem;
             text-align: center;
         }
 
-        .heart-container {
-            position: relative;
-            width: 150px;
-            height: 150px;
-            margin: 2rem auto;
+        .heart {
+            position: absolute;
+            font-size: 24px;
+            animation: float 3s infinite;
+        }
+
+        #cake {
             cursor: pointer;
-            transition: transform 0.3s ease;
+            transition: transform 0.3s;
         }
 
-        .heart-shape {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background: var(--primary-color);
-            clip-path: path("M12 4.419c-2.826-5.695-11.999-2.89-11.999 3.909 0 7.591 11.999 15.393 11.999 15.393s14-7.558 14-15.393c0-6.814-9.648-9.503-12-3.909z");
-            animation: pulse 2s ease infinite;
-        }
-
-        .sparkles {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-        }
-
-        .sparkle {
-            position: absolute;
-            background: #fff;
-            width: 3px;
-            height: 3px;
-            border-radius: 50%;
-            animation: sparkle 1.5s linear infinite;
-        }
-
-        h1 {
-            font-size: 3.5rem;
-            margin-bottom: 1.5rem;
-            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.1));
-        }
-
-        .love-letter {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 3rem;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            margin: 2rem 0;
-            position: relative;
-            transform: translateY(50px);
-            opacity: 0;
-            transition: all 1s ease;
-        }
-
-        .love-letter.visible {
-            transform: translateY(0);
-            opacity: 1;
-        }
-
-        .love-letter::before,
-        .love-letter::after {
-            content: "❝";
-            position: absolute;
-            font-size: 4rem;
-            color: var(--accent-color);
-            opacity: 0.3;
-        }
-
-        .love-letter::before {
-            top: -10px;
-            left: 10px;
-        }
-
-        .love-letter::after {
-            bottom: -40px;
-            right: 10px;
-            transform: rotate(180deg);
-        }
-
-        .signature {
-            font-family: 'Dancing Script', cursive;
-            font-size: 2.5rem;
-            color: var(--primary-color);
-            margin-top: 2rem;
-        }
-
-        .interactive-btn {
-            padding: 1.2rem 2.5rem;
-            font-size: 1.2rem;
-            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
-            color: white;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .interactive-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(255, 56, 96, 0.3);
-        }
-
-        .interactive-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(
-                120deg,
-                transparent,
-                rgba(255, 255, 255, 0.3),
-                transparent
-            );
-            transition: 0.5s;
-        }
-
-        .interactive-btn:hover::before {
-            left: 100%;
-        }
-
-        .floating-hearts span {
-            position: fixed;
-            font-size: 1.2rem;
-            animation: float 6s linear infinite;
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
-        }
-
-        @keyframes sparkle {
-            0% { transform: translateY(0) scale(1); opacity: 0; }
-            50% { opacity: 1; }
-            100% { transform: translateY(-100px) scale(0); opacity: 0; }
-        }
-
-        @keyframes float {
-            0% { transform: translateY(100vh) rotate(0deg); }
-            100% { transform: translateY(-100vh) rotate(360deg); }
-        }
-
-        .gallery {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-            margin: 3rem 0;
-        }
-
-        .photo {
-            position: relative;
-            overflow: hidden;
-            border-radius: 15px;
-            aspect-ratio: 1;
-            transition: transform 0.3s ease;
-        }
-
-        .photo img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.3s ease;
-        }
-
-        .photo:hover img {
+        #cake:hover {
             transform: scale(1.1);
         }
 
-        .progress-bar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            height: 3px;
-            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
-            z-index: 1000;
-            transition: width 0.2s ease;
+        .memory-card {
+            background: #2a2a2a;
+            padding: 1rem;
+            margin: 1rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
         }
 
-        @media (max-width: 768px) {
-            .container {
-                padding: 1rem;
-            }
-            
-            h1 {
-                font-size: 2.5rem;
-            }
-            
-            .love-letter {
-                padding: 2rem;
-            }
+        .memory-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(255,105,180,0.3);
+        }
+
+        #loveMeter {
+            width: 200px;
+            height: 20px;
+            background: #333;
+            border-radius: 10px;
+            margin: 2rem auto;
+            overflow: hidden;
+        }
+
+        #loveProgress {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, #ff69b4, #ff1493);
+            transform-origin: left;
+            transform: scaleX(0);
+            transition: transform 1s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        @keyframes confetti {
+            0% { transform: translateY(0) rotate(0deg); }
+            100% { transform: translateY(100vh) rotate(360deg); }
         }
     </style>
 </head>
 <body>
-    <div class="progress-bar"></div>
-
-    <section class="parallax">
-        <div class="container">
-            <div class="heart-container" onclick="createSparkles()">
-                <div class="heart-shape"></div>
-                <div class="sparkles"></div>
-            </div>
-            <h1>For My Sunshine</h1>
-            <button class="interactive-btn" onclick="revealLetter()">Open My Heart</button>
+    <div class="container">
+        <h1 id="mainTitle">🎉 Happy Birthday, [Name]! 🎉</h1>
+        
+        <!-- Interactive Cake -->
+        <div id="cake" onclick="lightCandles()">
+            🎂<br>
+            <span id="candles">🎇🎇🎇🎇</span>
         </div>
-    </section>
 
-    <section class="love-letter">
-        <div class="container">
-            <p>My Dearest,</p>
-            <br>
-            <p>From the moment our paths crossed, my world gained colors I never knew existed. Your laughter became my favorite melody, your kindness my daily inspiration, and your presence my safest haven.</p>
-            <br>
-            <p>I find myself...</p>
-            <ul style="list-style: none; margin: 1.5rem 0;">
-                <li>• Saving every message you send</li>
-                <li>• Remembering every detail you share</li>
-                <li>• Cherishing every moment we spend</li>
-            </ul>
-            <p>What I'm trying to say is... You've become my everything. I've never felt this way before, and I promise to cherish and respect you always.</p>
-            <br>
-            <p>Will you let me prove that true love exists?</p>
-            <div class="signature">Forever Yours</div>
-            
-            <div class="gallery">
-                <!-- Add your photos here -->
-<!--                 <div class="photo"><img src="https://media.discordapp.net/attachments/1097063586699952140/1357372401373151404/IMG20250403140406.jpg?ex=67eff70f&is=67eea58f&hm=4cbb57631df05f831b559dcbfe72c7a1d4e8dd471345eae99d0ac1165d9baa85&=&format=webp&width=946&height=533" alt="Memory 1"></div>
-                <div class="photo"><img src="https://media.discordapp.net/attachments/1097063586699952140/1357372402853740665/IMG_20250401_231848.jpg?ex=67eff70f&is=67eea58f&hm=411d3d1ac319dca586079cbca9e8a6403769e8cbcd29babac185cef123288659&=&format=webp&width=300&height=533" alt="Memory 2"></div>
-                <div class="photo"><img src="https://media.discordapp.net/attachments/1097063586699952140/1357372404971737370/Untitled74_20250325205411.png?ex=67eff710&is=67eea590&hm=44c3490312bfa138384bbd9410b0bdbffde76b89353ea8502f444b9aba6339a9&=&format=webp&quality=lossless&width=686&height=533" alt="Memory 3"></div>
-            </div>
-
-            <div class="response-buttons">
-                <button class="interactive-btn yes-btn" onclick="respond(true)">Yes 💖</button>
-                <button class="interactive-btn no-btn" onclick="respond(false)" style="margin-left: 1rem">Try Again 😉</button>
-            </div>
+        <!-- Love Meter -->
+        <div id="loveMeter">
+            <div id="loveProgress"></div>
         </div>
-    </section>
+        <button onclick="measureLove()">Measure Our Love 💖</button>
+
+        <!-- Memory Game -->
+        <h2>Our Special Memories</h2>
+        <div id="memoryGrid"></div>
+
+        <!-- Secret Message -->
+        <div id="secretMessage" style="display: none;">
+            <p>[Your Personal Message Here]</p>
+            <button onclick="startConfetti()">Celebrate! 🎊</button>
+        </div>
+    </div>
 
     <script>
-        // Progress bar
-        window.addEventListener('scroll', () => {
-            const scrollTotal = document.documentElement.scrollHeight - window.innerHeight;
-            const progress = (window.scrollY / scrollTotal) * 100;
-            document.querySelector('.progress-bar').style.width = `${progress}%`;
-        });
+        // Customize these!
+        const memories = [
+            "Our first date at [Location] 🌆",
+            "That time we [Inside Joke] 😂",
+            "Your amazing [Quality] that I love 💕",
+            "Our future plans to [Shared Dream] ✨"
+        ];
 
-        // Reveal letter
-        function revealLetter() {
-            document.querySelector('.love-letter').classList.add('visible');
-            document.querySelector('.interactive-btn').style.display = 'none';
-            createHearts();
+        // Initialize memory cards
+        function createMemoryGame() {
+            const grid = document.getElementById('memoryGrid');
+            memories.forEach((memory, index) => {
+                const card = document.createElement('div');
+                card.className = 'memory-card';
+                card.innerHTML = `Memory #${index+1} 🔒`;
+                card.onclick = () => revealMemory(memory, card);
+                grid.appendChild(card);
+            });
+        }
+
+        function revealMemory(memory, element) {
+            element.innerHTML = memory;
+            element.style.background = "#ff69b4";
+        }
+
+        function measureLove() {
+            const progress = document.getElementById('loveProgress');
+            progress.style.transform = "scaleX(1)";
+            setTimeout(() => {
+                alert("Result: Infinite Love! 💑");
+            }, 1000);
+        }
+
+        function lightCandles() {
+            document.getElementById('candles').innerHTML = "🕯️🕯️🕯️🕯️";
+            document.getElementById('secretMessage').style.display = "block";
+        }
+
+        function startConfetti() {
+            for(let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.innerHTML = ['🎉', '🎊', '💖', '🌸'][Math.floor(Math.random()*4)];
+                confetti.style.position = "absolute";
+                confetti.style.left = Math.random() * 100 + "vw";
+                confetti.style.animation = "confetti 2s linear";
+                document.body.appendChild(confetti);
+                setTimeout(() => confetti.remove(), 2000);
+            }
         }
 
         // Create floating hearts
         function createHearts() {
-            const heartContainer = document.body;
-            for(let i = 0; i < 50; i++) {
-                const heart = document.createElement('span');
-                heart.innerHTML = '❤️';
-                heart.style.left = Math.random() * 100 + '%';
-                heart.style.animationDelay = Math.random() * 3 + 's';
-                heart.style.fontSize = Math.random() * 20 + 10 + 'px';
-                heartContainer.appendChild(heart);
-            }
+            setInterval(() => {
+                const heart = document.createElement('div');
+                heart.className = "heart";
+                heart.innerHTML = "💖";
+                heart.style.left = Math.random() * 100 + "vw";
+                heart.style.animationDelay = Math.random() * 2 + "s";
+                document.body.appendChild(heart);
+                setTimeout(() => heart.remove(), 3000);
+            }, 300);
         }
 
-        // Create sparkles
-        function createSparkles() {
-            const sparklesContainer = document.querySelector('.sparkles');
-            for(let i = 0; i < 20; i++) {
-                const sparkle = document.createElement('div');
-                sparkle.className = 'sparkle';
-                sparkle.style.left = Math.random() * 100 + '%';
-                sparkle.style.animationDelay = Math.random() * 0.5 + 's';
-                sparklesContainer.appendChild(sparkle);
-                
-                setTimeout(() => sparkle.remove(), 1500);
-            }
-        }
-
-        // Response handler
-        function respond(answer) {
-            if(answer) {
-                alert("You've made me the happiest person in the world! 💕");
-                window.location.href = 'https://example.com/our-journey'; // Replace with your link
-            } else {
-                document.querySelectorAll('.no-btn').forEach(btn => {
-                    btn.style.transform = `translateX(${Math.random() * 20 - 10}px) 
-                                         translateY(${Math.random() * 20 - 10}px)`;
-                });
-            }
-        }
-
-        // Intersection Observer for animations
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if(entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                }
-            });
-        }, { threshold: 0.1 });
-
-        document.querySelectorAll('.love-letter').forEach(el => observer.observe(el));
+        // Initialize
+        window.onload = () => {
+            createMemoryGame();
+            createHearts();
+            
+            // Animate title
+            let hue = 0;
+            setInterval(() => {
+                document.getElementById('mainTitle').style.color = 
+                    `hsl(${hue = (hue + 2) % 360}, 100%, 65%)`;
+            }, 50);
+        };
     </script>
 </body>
-</html> -->
-
- -->
+</html>

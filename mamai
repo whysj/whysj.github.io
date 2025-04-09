@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Happy Birthday, [Name]! 💖</title>
+    <style>
+        body {
+            background: #ffe6f2;
+            font-family: 'Comic Sans MS', cursive;
+            text-align: center;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .heart {
+            position: absolute;
+            font-size: 30px;
+            cursor: pointer;
+            animation: float 3s infinite;
+        }
+
+        .surprise-button {
+            background: #ff4081;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 25px;
+            font-size: 20px;
+            cursor: pointer;
+            transition: transform 0.3s;
+            margin: 20px;
+        }
+
+        .surprise-button:hover {
+            transform: scale(1.1);
+            background: #ff79b0;
+        }
+
+        .message-box {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            margin: 20px;
+            display: none;
+        }
+
+        #photo-album {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin: 20px;
+        }
+
+        #photo-album img {
+            width: 100%;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        #photo-album img:hover {
+            transform: scale(1.05);
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .konami {
+            background: black;
+            color: white;
+            padding: 20px;
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎉 Happy Birthday, [Girlfriend's Name]! 🎉</h1>
+        
+        <!-- Floating hearts -->
+        <div class="heart" style="left: 10%">❤️</div>
+        <div class="heart" style="left: 30%">💖</div>
+        <div class="heart" style="left: 50%">💝</div>
+        <div class="heart" style="left: 70%">💘</div>
+        <div class="heart" style="left: 90%">💕</div>
+
+        <!-- Interactive buttons -->
+        <button class="surprise-button" onclick="showMessage('message1')">Click for Memory #1</button>
+        <button class="surprise-button" onclick="startLoveGame()">Play the Love Game 💖</button>
+        <button class="surprise-button" onclick="showPhotoAlbum()">Our Photos 📸</button>
+
+        <!-- Hidden messages -->
+        <div id="message1" class="message-box">
+            <h3>Our First Date 🍿</h3>
+            <p>[Insert your first date memory here]</p>
+            <small>Date: [Date]</small>
+        </div>
+
+        <!-- Love Game -->
+        <div id="love-game" style="display: none;">
+            <h2>How Much Do I Love You? 💞</h2>
+            <div id="love-meter" style="height: 20px; background: #ddd; border-radius: 10px; margin: 20px;">
+                <div id="love-progress" style="width: 0%; height: 100%; background: #ff4081; border-radius: 10px;"></div>
+            </div>
+            <button onclick="fillLoveMeter()">Click to Fill My Love! 💖</button>
+        </div>
+
+        <!-- Photo Album -->
+        <div id="photo-album" style="display: none;">
+            <!-- Add 6+ photos (replace placeholder URLs) -->
+            <img src="[PHOTO1_URL]" alt="Our Memory">
+            <img src="[PHOTO2_URL]" alt="Our Memory">
+            <img src="[PHOTO3_URL]" alt="Our Memory">
+        </div>
+
+        <!-- Hidden Konami Code Easter Egg -->
+        <div id="secret" class="konami">
+            <h2>🎉 SECRET MESSAGE! 🎉</h2>
+            <p>You found the hidden surprise! I love you more than [inside joke]! 😘</p>
+        </div>
+    </div>
+
+    <script>
+        // Floating hearts animation
+        document.querySelectorAll('.heart').forEach(heart => {
+            heart.style.top = Math.random() * 80 + '%';
+            heart.style.animationDelay = Math.random() * 2 + 's';
+        });
+
+        // Message reveal function
+        function showMessage(id) {
+            document.querySelectorAll('.message-box').forEach(box => {
+                box.style.display = 'none';
+            });
+            document.getElementById(id).style.display = 'block';
+        }
+
+        // Love Game
+        let love = 0;
+        function startLoveGame() {
+            document.getElementById('love-game').style.display = 'block';
+        }
+
+        function fillLoveMeter() {
+            love = Math.min(love + 10, 100);
+            document.getElementById('love-progress').style.width = love + '%';
+            
+            if(love === 100) {
+                alert("I love you 100%! ❤️ Here's your real gift: [Insert gift hint]");
+            }
+        }
+
+        // Photo Album
+        function showPhotoAlbum() {
+            document.getElementById('photo-album').style.display = 'grid';
+        }
+
+        // Konami Code Easter Egg (↑↑↓↓←→←→BA)
+        let konamiCode = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','KeyB','KeyA'];
+        let konamiIndex = 0;
+        
+        document.addEventListener('keydown', (e) => {
+            if(e.code === konamiCode[konamiIndex]) {
+                konamiIndex++;
+                if(konamiIndex === konamiCode.length) {
+                    document.getElementById('secret').style.display = 'block';
+                    konamiIndex = 0;
+                }
+            } else {
+                konamiIndex = 0;
+            }
+        });
+
+        // Confetti effect
+        function shootConfetti() {
+            const duration = 3000;
+            const end = Date.now() + duration;
+
+            (function frame() {
+                confetti({
+                    particleCount: 7,
+                    angle: 60,
+                    spread: 55,
+                    origin: { x: 0 },
+                    colors: ['#ff4081', '#ff79b0', '#ffffff']
+                });
+                confetti({
+                    particleCount: 7,
+                    angle: 120,
+                    spread: 55,
+                    origin: { x: 1 },
+                    colors: ['#ff4081', '#ff79b0', '#ffffff']
+                });
+
+                if(Date.now() < end) {
+                    requestAnimationFrame(frame);
+                }
+            }());
+        }
+
+        // Initial confetti
+        shootConfetti();
+    </script>
+    <!-- Add confetti library -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+</body>
+</html>

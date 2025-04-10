@@ -1,1 +1,204 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday, My Love! ❤️</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+            color: white;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .header {
+            padding: 100px 0;
+            position: relative;
+        }
+
+        h1 {
+            font-size: 4em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .photo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 40px 0;
+        }
+
+        .photo-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .photo-item:hover {
+            transform: scale(1.05);
+        }
+
+        .photo-item img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+        }
+
+        .love-meter {
+            background: rgba(255,255,255,0.1);
+            padding: 30px;
+            border-radius: 15px;
+            margin: 40px 0;
+        }
+
+        .progress-bar {
+            width: 80%;
+            height: 30px;
+            background: #fff;
+            border-radius: 15px;
+            margin: 20px auto;
+            overflow: hidden;
+        }
+
+        .progress {
+            width: 100%;
+            height: 100%;
+            background: #ff4757;
+            transform-origin: left;
+            transform: scaleX(0);
+            transition: transform 1s;
+        }
+
+        .heart {
+            position: fixed;
+            bottom: -50px;
+            font-size: 2em;
+            animation: float 3s infinite;
+            opacity: 0;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(10deg); }
+            100% { transform: translateY(0) rotate(0deg); }
+        }
+
+        .hidden-message {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 1s;
+            margin: 100px 0;
+        }
+
+        .revealed {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Happy Birthday, My Beautiful [Girlfriend's Name]! ❤️</h1>
+            <div class="confetti"></div>
+        </div>
+
+        <div class="photo-grid">
+            <!-- Add your photos here -->
+            <div class="photo-item" onclick="showMessage('Remember this day? 😊')">
+                <img src="photo1.jpg" alt="Our Memory">
+            </div>
+            <div class="photo-item" onclick="showMessage('You look stunning here! 💖')">
+                <img src="photo2.jpg" alt="Our Memory">
+            </div>
+            <!-- Add more photos -->
+        </div>
+
+        <div class="love-meter">
+            <h2>How Much I Love You</h2>
+            <div class="progress-bar">
+                <div class="progress" id="love-progress"></div>
+            </div>
+            <button onclick="increaseLove()">Click to See More Love ❤️</button>
+        </div>
+
+        <div class="hidden-message" id="secretMessage">
+            <h2>You're My Forever</h2>
+            <p>[Personalize this message with your own words]</p>
+        </div>
+    </div>
+
+    <script>
+        // Confetti animation
+        function createConfetti() {
+            const colors = ['#ff6b6b', '#ff8e8e', '#ffffff', '#ff4757'];
+            for (let i = 0; i < 100; i++) {
+                const confetti = document.createElement('div');
+                confetti.style.position = 'absolute';
+                confetti.style.left = Math.random() * 100 + '%';
+                confetti.style.width = '10px';
+                confetti.style.height = '10px';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.borderRadius = '50%';
+                confetti.style.animation = `fall ${Math.random() * 3 + 2}s linear`;
+                document.querySelector('.confetti').appendChild(confetti);
+            }
+        }
+
+        // Photo click message
+        function showMessage(msg) {
+            alert(msg);
+        }
+
+        // Love meter progress
+        let loveLevel = 0;
+        function increaseLove() {
+            loveLevel += 0.1;
+            if(loveLevel > 10) {
+                loveLevel = 10;
+                alert("I love you to infinity and beyond! 💫");
+            }
+            document.getElementById('love-progress').style.transform = `scaleX(${loveLevel/10})`;
+        }
+
+        // Heart cursor follower
+        document.addEventListener('mousemove', (e) => {
+            const heart = document.createElement('div');
+            heart.className = 'heart';
+            heart.innerHTML = '❤️';
+            heart.style.left = e.pageX + 'px';
+            heart.style.top = e.pageY + 'px';
+            document.body.appendChild(heart);
+            
+            setTimeout(() => {
+                heart.remove();
+            }, 3000);
+        });
+
+        // Scroll reveal
+        window.addEventListener('scroll', () => {
+            const message = document.getElementById('secretMessage');
+            const position = message.getBoundingClientRect();
+            if(position.top < window.innerHeight) {
+                message.classList.add('revealed');
+            }
+        });
+
+        // Initialize confetti
+        createConfetti();
+    </script>
+</body>
+</html>

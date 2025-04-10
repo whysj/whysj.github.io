@@ -18,7 +18,7 @@
 <body>
 
     <audio class="song" loop autoplay>
-        <source src="./music/hbd.mpeg">
+        <source src="./music/0410.mp3">
         </source>
         Your browser isn't invited for super fun audio time.
     </audio>
@@ -65,7 +65,7 @@
         </div>
 
         <div class="six">
-            <img src="./img/IMG20250314110422.jpg" alt="profile" class="profile-picture" id="imagePath"/>
+            <img src="./img/mai.jpg" alt="profile" class="profile-picture" id="imagePath"/>
             <img src="img/hat.svg" alt="hat" class="hat" />
             <div class="wish">
                 <h3 class="wish-hbd">Happy Birthday!</h3>

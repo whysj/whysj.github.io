@@ -1,4 +1,4 @@
-<!-- <script type="text/javascript">
+<script type="text/javascript">
         var gk_isXlsx = false;
         var gk_xlsxFileLookup = {};
         var gk_fileData = {};
@@ -42,7 +42,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mamai Birthday's Card</title>
+    <title>Pink Love Balloon Birthday Card with Key Input</title>
     <style>
         body {
             display: flex;
@@ -195,6 +195,10 @@
             z-index: 6;
         }
 
+        .close-button:hover {
+            background: #ad1457;
+        }
+
         .close-button.show {
             display: block;
         }
@@ -282,6 +286,68 @@
             z-index: 5;
         }
 
+        .password-container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            z-index: 10;
+            display: none;
+            text-align: center;
+        }
+
+        .password-container.show {
+            display: block;
+        }
+
+        .password-container input {
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid #e91e63;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            width: 150px;
+            text-align: center;
+        }
+
+        .password-container button {
+            padding: 8px 16px;
+            background: #c2185b;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .password-container button:hover {
+            background: #ad1457;
+        }
+
+        .error-message {
+            position: absolute;
+            top: 60%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 255, 255, 0.9);
+            color: #c2185b;
+            padding: 10px 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 5;
+            font-size: 16px;
+        }
+
+        .error-message.show {
+            opacity: 1;
+        }
+
         @keyframes float {
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-10px); }
@@ -307,32 +373,76 @@
             <div class="side-flap right-flap"></div>
             <div class="letter">
                 <button class="close-button" onclick="closeEnvelope()">Close</button>
-                <h1>Happy Birthday, Mamai!</h1>
+                <h1>Happy Birthday, My Love!</h1>
                 <p>Dear Sweetheart,</p>
                 <p>
-                    aku minta maaf gabisa rayain ultah kamu, seperti yang kamu mau, mungkin cuman ucapan ini yang bisa aku kasih kekamu.
-                    aku mungkin juga gabisa kasih apa-apa, tapi semoga kamu sehat selalu ya, kamu juga dimudahkan semua urusannya, semoga apa yang kamu inginkan cepat terkabul, dan semoga sukses dimasa depan.
-                </p>
+                    selamat ulang tahun ya sayang, ini hari yang sangat spesial buat kamu... hari dimana ibumu ngelahirin kamu, dan sekarang kamu bertambah usia.
+                    mungkin terdengar biasa aja, tapi aku berdoa buat kamu, semoga apa yang kamu inginkan, cita-citamu yang kamu mimpikan, dan hal yang kamu mau dikemudian hari nanti dapat terkabul.
+                    aku berdoa juga, kamu selalu diberi kesehatan, semua teman-temanmu mulai akrab sama kamu, dan kamu juga bisa bareng sama cowo mu terus sampai kamu besar nanti.
                 <p>
-                        aku juga ngerti, hidup mu memang ga mudah, tapi jangan pernah nyerah... aku salut sama kamu, bisa laluin semua ini walau terasa berat tapi semua terasa ringah ketika kamu percaya dirimu sendiri.
-                        kamu bener-bener cewe yang sangat cantik, pinter, dan juga imut. 
-                        aku berharap kita bisa terus sama-sama, aku tau mungkin aku bukan orang yang terbaik buat kamu, tapi aku nyoba sebisa aku...
-                        sekali lagi, selamat ulang tahun ya sayang...
+                    kamu itu bener-bener cewe yang baik, kamu punya paras yang sangat cantik, kamu imut, tingkahmu itu lucu, tetapi hal yang paling aku suka dari kamu
+                    adalah sifatmu itu, aku suka cewe seperti mu, aku tau kamu masih muda banget, dan mungkin terdengar aneh, tapi aku beneran suka semua tentang kamu.
+                    kamu itu lucu banget, tingkahmu bener-bener seperti cewe yang aku mau, kamu aktif, kamu juga sering ketawa, dan senyum kamu bener-bener manis.
+                    aku berharap, kita bisa langgeng dan bisa menggapai mimpi kita berdua di masa depan nanti.
+                    aku selalu berusaha untuk kita, tapi aku minta maaf kalo nyatanya aku nanti gagal atau bahkan malah ngecewain kamu.
+
+                    mungkin cuman ini yang bisa aku kasih, dihari spesial mu... aku minta maaf kalo aku belom bisa kasih surprise ulang tahun seperti yang kamu inginkan.
+                    aku selalu bilang kekamu, ada cowo yang lebih pantes dan bisa bikin kamu bahagia, dibanding aku yang kaya gini.
+                    
+                    sekali lagi aku ucapkan, selamat ulang tahun sayangku. aku sangat mencintai kamu.
                 </p>
                 <p>
                     Forever yours,
                 </p>
                 <p class="signature"><a href="">Mamangi</a></p>
             </div>
-            <div class="wax-seal" onclick="openEnvelope()">💕</div>
+            <div class="wax-seal" onclick="showPasswordInput()">💕</div>
         </div>
         <div class="decoration balloon" style="top: 10%; left: 5%;"></div>
         <div class="decoration balloon" style="top: 20%; right: 5%;"></div>
         <div class="decoration heart" style="bottom: 10%; left: 10%;"></div>
         <div class="decoration heart" style="bottom: 15%; right: 10%;"></div>
+        <div class="error-message" id="errorMessage">kodenya salah woi, yang benar! masa gatau :<</div>
+    </div>
+    <div class="password-container" id="passwordContainer">
+        <h3>masukan 6 angka spesial hehe</h3>
+        <input type="text" id="passwordInput" maxlength="6" placeholder="123456">
+        <button onclick="submitCode()">enter</button>
     </div>
 
     <script>
+        const correctCode = "140512";
+
+        function showPasswordInput() {
+            const passwordContainer = document.getElementById('passwordContainer');
+            const passwordInput = document.getElementById('passwordInput');
+            passwordInput.value = '';
+            passwordContainer.classList.add('show');
+            passwordInput.focus();
+        }
+
+        function submitCode() {
+            const passwordInput = document.getElementById('passwordInput');
+            const userCode = passwordInput.value;
+            const passwordContainer = document.getElementById('passwordContainer');
+
+            if (userCode === correctCode) {
+                passwordContainer.classList.remove('show');
+                openEnvelope();
+            } else {
+                passwordContainer.classList.remove('show');
+                showErrorMessage();
+            }
+        }
+
+        function showErrorMessage() {
+            const errorMessage = document.getElementById('errorMessage');
+            errorMessage.classList.add('show');
+            setTimeout(() => {
+                errorMessage.classList.remove('show');
+            }, 2000);
+        }
+
         function openEnvelope() {
             const flap = document.querySelector('.flap');
             const leftFlap = document.querySelector('.left-flap');
@@ -384,7 +494,13 @@
                 waxSeal.classList.remove('broken');
             }, 800);
         }
+
+        // Allow Enter key to submit the code
+        document.getElementById('passwordInput').addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                submitCode();
+            }
+        });
     </script>
 </body>
 </html>
- -->

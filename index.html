@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>For My Lovely Girl</title>
+  <title>For My Lovely Girl — Fixed & Robust</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Pacifico&display=swap" rel="stylesheet">
   <style>
     :root{--pink:#ff4f9a;--dark:#06020a}
@@ -46,53 +46,27 @@
     .btn{background:var(--pink);color:#fff;border:none;padding:10px 14px;border-radius:10px;cursor:pointer;font-weight:600}
 
     @media (max-width:480px){.panel .panel-text{font-size:1rem}.panel img{width:140%;height:140%}}
+
     /* CINEMATIC EFFECTS */
-  body::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    backdrop-filter: brightness(1.15) contrast(1.08) saturate(1.2) blur(2px);
-    mix-blend-mode: screen;
-  }
-
-  .vignette::after {
-    content: "";
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    background: radial-gradient(circle, rgba(0,0,0,0) 50%, rgba(0,0,0,0.55) 100%);
-    z-index: 5;
-  }
-
-  .film-grain::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    background-image: url('https://i.imgur.com/3fJZCkB.png');
-    opacity: 0.18;
-    mix-blend-mode: overlay;
-    z-index: 6;
-  }
-
-  .bloom {
-    filter: drop-shadow(0 0 18px rgba(255, 170, 250, 0.65)) drop-shadow(0 0 32px rgba(255, 180, 255, 0.4));
-  }
-</style>
+    body::before{content:"";position:fixed;inset:0;pointer-events:none;backdrop-filter:brightness(1.12) contrast(1.06) saturate(1.15) blur(1.6px);mix-blend-mode:screen}
+    .vignette::after{content:"";position:fixed;inset:0;pointer-events:none;background:radial-gradient(circle, rgba(0,0,0,0) 50%, rgba(0,0,0,0.55) 100%);z-index:5}
+    .film-grain::before{content:"";position:fixed;inset:0;pointer-events:none;background-image:url('https://i.imgur.com/3fJZCkB.png');opacity:0.12;mix-blend-mode:overlay;z-index:6}
+    .bloom{filter:drop-shadow(0 0 18px rgba(255,170,255,0.5))}
+  </style>
 </head>
 <body class="vignette film-grain">
 
-  <!-- AUDIO: music + whoosh + voiceover (placeholder URL for voiceover: replace with your file) -->
+  <!-- AUDIO: music + whoosh + optional panel voice files -->
   <audio id="music" preload="auto" loop>
     <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_7e763a5c54.mp3?filename=soft-piano-ambient-110397.mp3" type="audio/mpeg">
   </audio>
   <audio id="whooshSnd" preload="auto">
     <source src="https://cdn.pixabay.com/download/audio/2022/02/08/audio_3a3c7a4b1c.mp3?filename=whoosh-01-7171.mp3" type="audio/mpeg">
   </audio>
-  <audio id="voiceover" preload="auto">
-    <!-- replace with your voiceover URL -->
-    <source src="https://cdn.pixabay.com/download/audio/2021/08/04/audio_6a1f3f1f3f.mp3?filename=emotional-speech-6949.mp3" type="audio/mpeg">
+
+  <!-- SONG AFTER CUTSCENE (replace URL if you want a different song) -->
+  <audio id="postSong" preload="auto">
+    <source src="https://cdn.pixabay.com/download/audio/2023/03/15/audio_a9b324e65c.mp3?filename=romantic-piano-140983.mp3" type="audio/mpeg">
   </audio>
 
   <!-- LETTERBOX TOP/BOTTOM -->
@@ -138,141 +112,186 @@
   <div class="chromatic"></div>
 
   <script>
-    // tiny helper
-    const $ = id => document.getElementById(id);
+  // Wrap initialization in DOMContentLoaded so edited documents won't break
+  document.addEventListener('DOMContentLoaded', ()=>{
+    try{
+      // helper
+      const $ = id => document.getElementById(id);
 
-    // elements
-    const startBtn = $('startBtn');
-    const cutscene = $('cutscene');
-    const panelContainer = $('panelContainer');
-    const lbTop = $('lbTop');
-    const lbBottom = $('lbBottom');
-    const music = $('music');
-    const whooshSnd = $('whooshSnd');
-    const voiceover = $('voiceover');
-    const letterModal = $('letterModal');
-    const handwriting = $('handwriting');
-    const closeLetter = $('closeLetter');
-    const slideImg = $('slideImg');
-    const slideshow = $('slideshow');
-    const slideControls = $('slideControls');
-    const prevSlide = $('prevSlide');
-    const nextSlide = $('nextSlide');
-    const muteBtn = $('muteBtn');
+      // elements
+      const startBtn = $('startBtn');
+      const cutscene = $('cutscene');
+      const panelContainer = $('panelContainer');
+      const lbTop = $('lbTop');
+      const lbBottom = $('lbBottom');
+      const music = $('music');
+      const whooshSnd = $('whooshSnd');
+      const postSong = $('postSong');
+      const letterModal = $('letterModal');
+      const handwriting = $('handwriting');
+      const closeLetter = $('closeLetter');
+      const slideImg = $('slideImg');
+      const slideshow = $('slideshow');
+      const slideControls = $('slideControls');
+      const prevSlide = $('prevSlide');
+      const nextSlide = $('nextSlide');
+      const muteBtn = $('muteBtn');
 
-    // panels (extended)
-    const panels = [
-      { img: 'https://picsum.photos/1400/900?image=1024', text: 'Hari itu… semuanya berubah.' },
-      { img: 'https://picsum.photos/1400/900?image=1044', text: 'Kadang aku mikir… apa semua ini cuma kebetulan?' },
-      { img: 'https://picsum.photos/1400/900?image=1069', text: 'Aku lihat kamu untuk pertama kalinya… dan dunia jadi lebih tenang.' },
-      { img: 'https://picsum.photos/1400/900?image=1050', text: 'Setiap senyummu adalah alasan kenapa aku tetap tersenyum.' },
-      { img: 'https://picsum.photos/1400/900?image=1033', text: 'Mau kemana pun kita pergi, aku pengen tetap di sampingmu. Selamanya.' },
-      { img: 'https://picsum.photos/1400/900?image=1015', text: 'Jujur… kadang gw takut. Takut kehilangan kamu.' },
-      { img: 'https://picsum.photos/1400/900?image=1074', text: 'Tapi setiap kali kamu bilang “gapapa, aku ada di sini”… hati gw langsung tenang.' }
-    ];
+      // panels data – add `voice` full URLs when available
+      const panels = [
+        { img: 'https://picsum.photos/1400/900?image=1024', text: 'Hari itu… semuanya berubah.', voice: '' },
+        { img: 'https://picsum.photos/1400/900?image=1044', text: 'Kadang aku mikir… apa semua ini cuma kebetulan?', voice: '' },
+        { img: 'https://picsum.photos/1400/900?image=1069', text: 'Aku lihat kamu untuk pertama kalinya… dan dunia jadi lebih tenang.', voice: '' },
+        { img: 'https://picsum.photos/1400/900?image=1050', text: 'Setiap senyummu adalah alasan kenapa aku tetap tersenyum.', voice: '' },
+        { img: 'https://picsum.photos/1400/900?image=1033', text: 'Mau kemana pun kita pergi, aku pengen tetap di sampingmu. Selamanya.', voice: '' },
+        { img: 'https://picsum.photos/1400/900?image=1015', text: 'Jujur… kadang gw takut. Takut kehilangan kamu.', voice: '' },
+        { img: 'https://picsum.photos/1400/900?image=1074', text: 'Tapi setiap kali kamu bilang “gapapa, aku ada di sini”… hati gw langsung tenang.', voice: '' }
+      ];
 
-    // create panels
-    panels.forEach((p, idx)=>{
-      const el = document.createElement('div'); el.className='panel'; el.style.zIndex = 10000-idx;
-      const img = document.createElement('img'); img.src = p.img; img.alt = '';
-      const t = document.createElement('div'); t.className='panel-text'; t.innerText = p.text;
-      el.appendChild(img); el.appendChild(t); panelContainer.appendChild(el);
-    });
+      // build panels safely
+      function buildPanels(){
+        if(!panelContainer) return;
+        panelContainer.innerHTML = '';
+        panels.forEach((p, idx)=>{
+          const el = document.createElement('div'); el.className='panel'; el.style.zIndex = 10000-idx;
+          const img = document.createElement('img'); img.src = p.img; img.alt = '';
+          const t = document.createElement('div'); t.className='panel-text'; t.innerText = p.text;
+          el.appendChild(img); el.appendChild(t); panelContainer.appendChild(el);
+        });
+      }
+      buildPanels();
 
-    // canvas particles
-    const cutCanvas = $('cutCanvas');
-    const cctx = cutCanvas && cutCanvas.getContext ? cutCanvas.getContext('2d') : null;
-    function resizeCanvas(){ if(!cutCanvas) return; cutCanvas.width = window.innerWidth; cutCanvas.height = window.innerHeight; }
-    window.addEventListener('resize', resizeCanvas); resizeCanvas();
+      // canvas particle setup
+      const cutCanvas = $('cutCanvas');
+      const cctx = cutCanvas && cutCanvas.getContext ? cutCanvas.getContext('2d') : null;
+      function resizeCanvas(){ if(!cutCanvas) return; cutCanvas.width = window.innerWidth; cutCanvas.height = window.innerHeight; }
+      window.addEventListener('resize', resizeCanvas); resizeCanvas();
 
-    const particles = [];
-    const PCOUNT = 80;
-    function initParticles(){ if(!cctx) return; particles.length=0; for(let i=0;i<PCOUNT;i++){ particles.push({ x:Math.random()*cutCanvas.width, y:Math.random()*cutCanvas.height, r:Math.random()*3+1, vx:(Math.random()-0.5)*0.3, vy:(Math.random()-0.1)*0.3, alpha:0.25+Math.random()*0.6 }); } }
-    function animateParticles(){ if(!cctx) return; cctx.clearRect(0,0,cutCanvas.width,cutCanvas.height); particles.forEach(p=>{ p.x+=p.vx; p.y+=p.vy; if(p.x<0) p.x=cutCanvas.width; if(p.x>cutCanvas.width) p.x=0; if(p.y<0) p.y=cutCanvas.height; if(p.y>cutCanvas.height) p.y=0; cctx.beginPath(); cctx.fillStyle = `rgba(255,170,255,${p.alpha})`; cctx.shadowBlur=12; cctx.shadowColor='rgba(255,150,255,0.9)'; cctx.arc(p.x,p.y,p.r,0,Math.PI*2); cctx.fill(); }); requestAnimationFrame(animateParticles); }
-    initParticles(); animateParticles();
+      const particles = [];
+      const PCOUNT = 80;
+      function initParticles(){ if(!cctx) return; particles.length=0; for(let i=0;i<PCOUNT;i++){ particles.push({ x:Math.random()*cutCanvas.width, y:Math.random()*cutCanvas.height, r:Math.random()*3+1, vx:(Math.random()-0.5)*0.3, vy:(Math.random()-0.1)*0.3, alpha:0.25+Math.random()*0.6 }); } }
+      function animateParticles(){ if(!cctx) return; cctx.clearRect(0,0,cutCanvas.width,cutCanvas.height); particles.forEach(p=>{ p.x+=p.vx; p.y+=p.vy; if(p.x<0) p.x=cutCanvas.width; if(p.x>cutCanvas.width) p.x=0; if(p.y<0) p.y=cutCanvas.height; if(p.y>cutCanvas.height) p.y=0; cctx.beginPath(); cctx.fillStyle = `rgba(255,170,255,${p.alpha})`; cctx.shadowBlur=12; cctx.shadowColor='rgba(255,150,255,0.9)'; cctx.arc(p.x,p.y,p.r,0,Math.PI*2); cctx.fill(); }); requestAnimationFrame(animateParticles); }
+      initParticles(); animateParticles();
 
-    // whoosh
-    function whooshFlash(){ if(!whooshSnd) return; whooshSnd.currentTime=0; whooshSnd.play().catch(()=>{}); const ov = $('whooshOverlay'); if(!ov) return; ov.style.background='linear-gradient(90deg, rgba(255,255,255,0.05), rgba(255,255,255,0.22), rgba(255,255,255,0.05))'; ov.style.opacity=1; ov.style.transition='opacity .5s'; setTimeout(()=>ov.style.opacity=0,260); }
+      // whoosh helper
+      function whooshFlash(){ if(!whooshSnd) return; whooshSnd.currentTime=0; whooshSnd.play().catch(()=>{}); const ov = $('whooshOverlay'); if(!ov) return; ov.style.background='linear-gradient(90deg, rgba(255,255,255,0.05), rgba(255,255,255,0.22), rgba(255,255,255,0.05))'; ov.style.opacity=1; ov.style.transition='opacity .5s'; setTimeout(()=>ov.style.opacity=0,260); }
 
-    const wait = ms => new Promise(res=>setTimeout(res, ms));
+      const wait = ms => new Promise(res=>setTimeout(res, ms));
 
-    // cutscene player with longer pacing and monologue
-    async function playCutscene(){
-      if(lbTop) lbTop.classList.add('show'); if(lbBottom) lbBottom.classList.add('show');
-      if(music) music.play().catch(()=>{});
+      // spawn sakura petals
+      function spawnSakura(count=10){ for(let i=0;i<count;i++){ const p=document.createElement('div'); p.innerText='🌸'; p.style.position='fixed'; p.style.left=(10+Math.random()*80)+'vw'; p.style.top='-6vh'; p.style.fontSize=(14+Math.random()*28)+'px'; p.style.zIndex=10040; p.style.opacity='0.95'; document.body.appendChild(p); const dur=3+Math.random()*4; requestAnimationFrame(()=>{ p.style.transition=`transform ${dur}s linear, opacity ${dur}s linear`; p.style.transform=`translate(${(Math.random()-0.5)*20}vw, 110vh) rotate(${Math.random()*720}deg)`; p.style.opacity='0'; }); setTimeout(()=>p.remove(), (dur+0.5)*1000); } }
 
-      // initial flashback caption
-      const flash = document.createElement('div'); flash.style.position='fixed'; flash.style.inset='0'; flash.style.background='#000'; flash.style.zIndex='10050'; flash.style.display='flex'; flash.style.alignItems='center'; flash.style.justifyContent='center';
-      const flashText = document.createElement('div'); flashText.style.color='rgba(255,255,255,0.92)'; flashText.style.fontSize='1.25rem'; flashText.style.fontWeight='300'; flashText.style.textAlign='center'; flashText.style.padding='0 20px'; flashText.innerText='Hari itu… semuanya berubah.';
-      flash.appendChild(flashText); document.body.appendChild(flash);
-      await wait(1600); flash.style.transition='opacity 1s'; flash.style.opacity=0; await wait(1000); flash.remove();
+      // handwriting animation
+      function animateHandwriting(text, speed=40){ if(!handwriting) return; handwriting.innerHTML=''; const chars = Array.from(text); chars.forEach((ch,i)=>{ const span = document.createElement('span'); span.innerText = ch; handwriting.appendChild(span); setTimeout(()=>{ span.style.transition='opacity 350ms ease, transform 350ms cubic-bezier(.2,.9,.2,1)'; span.style.opacity='1'; span.style.transform='translateY(0) rotate(0deg)'; }, i*speed + Math.random()*30); }); }
 
-      const panelEls = panelContainer ? Array.from(panelContainer.querySelectorAll('.panel')) : [];
-      for(let i=0;i<panelEls.length;i++){
-        const el = panelEls[i]; const img = el.querySelector('img'); const txt = el.querySelector('.panel-text');
-        panelEls.forEach(p=>{ p.style.opacity=0; const t=p.querySelector('.panel-text'); if(t) t.style.opacity=0; });
-        el.style.opacity=1; el.style.transition='opacity .45s'; if(img){ img.style.transform='scale(1.14) translateY(-6%)'; img.style.transition='transform 8s linear'; }
-        whooshFlash(); await wait(600);
-        if(txt){ txt.style.opacity=1; txt.style.transform='translateY(0)'; txt.style.transition='opacity 1s, transform 1s'; }
-        // choose linger length
-        const linger = (i < 2) ? 2400 : (i >= panels.length-2 ? 5200 : 3800);
-        await wait(linger);
-        if(txt) txt.style.opacity=0; if(img) img.style.transform='scale(1)'; await wait(500);
+      // slideshow
+      let slides = []; let sIndex = 0; let sTimer = null;
+      function initSlideshow(arr){ slides = arr.slice(); if(!slideImg) return; slideImg.src = slides[0]; if(slideshow) slideshow.style.display='block'; if(slideControls) slideControls.style.display='flex'; sIndex = 0; if(sTimer) clearInterval(sTimer); sTimer = setInterval(()=> nextSlideFn(), 3000); }
+      function showSlide(i){ if(!slideImg || slides.length===0) return; sIndex = (i + slides.length) % slides.length; slideImg.src = slides[sIndex]; }
+      function nextSlideFn(){ showSlide(sIndex+1); }
+      function prevSlideFn(){ showSlide(sIndex-1); }
+      if(nextSlide) nextSlide.addEventListener('click', ()=>{ nextSlideFn(); if(sTimer){ clearInterval(sTimer); sTimer = setInterval(()=> nextSlideFn(), 3000); } });
+      if(prevSlide) prevSlide.addEventListener('click', ()=>{ prevSlideFn(); if(sTimer){ clearInterval(sTimer); sTimer = setInterval(()=> nextSlideFn(), 3000); } });
+
+      // mute control
+      if(muteBtn){ muteBtn.addEventListener('click', ()=>{ if(music){ if(music.paused){ music.play(); muteBtn.innerText='Mute'; } else { music.pause(); muteBtn.innerText='Play'; } } }); }
+
+      // cutscene player with per-panel voice playback
+      async function playCutscene(){
+        if(lbTop) lbTop.classList.add('show'); if(lbBottom) lbBottom.classList.add('show');
+        if(music) music.play().catch(()=>{});
+
+        // initial flashback caption
+        const flash = document.createElement('div'); flash.style.position='fixed'; flash.style.inset='0'; flash.style.background='#000'; flash.style.zIndex='10050'; flash.style.display='flex'; flash.style.alignItems='center'; flash.style.justifyContent='center';
+        const flashText = document.createElement('div'); flashText.style.color='rgba(255,255,255,0.92)'; flashText.style.fontSize='1.25rem'; flashText.style.fontWeight='300'; flashText.style.textAlign='center'; flashText.style.padding='0 20px'; flashText.innerText='Hari itu… semuanya berubah.';
+        flash.appendChild(flashText); document.body.appendChild(flash);
+        await wait(1600); flash.style.transition='opacity 1s'; flash.style.opacity=0; await wait(1000); flash.remove();
+
+        const panelEls = panelContainer ? Array.from(panelContainer.querySelectorAll('.panel')) : [];
+
+        // currentVoice holds the playing Audio instance
+        let currentVoice = null;
+
+        for(let i=0;i<panelEls.length;i++){
+          const el = panelEls[i];
+          const img = el.querySelector('img');
+          const txt = el.querySelector('.panel-text');
+          const data = panels[i] || {};
+
+          // reset others
+          panelEls.forEach(p=>{ p.style.opacity=0; const t=p.querySelector('.panel-text'); if(t) t.style.opacity=0; });
+
+          // show this
+          el.style.opacity=1; el.style.transition='opacity .45s';
+          if(img){ img.style.transform='scale(1.14) translateY(-6%)'; img.style.transition='transform 8s linear'; }
+
+          // play panel-specific voice if provided
+          if(currentVoice){ try{ currentVoice.pause(); currentVoice.src=''; }catch(e){} currentVoice=null; }
+          if(data.voice){ try{ currentVoice = new Audio(data.voice); currentVoice.volume = 1; currentVoice.play().catch(()=>{}); }catch(e){ currentVoice=null; } }
+
+          whooshFlash();
+          await wait(600);
+
+          if(txt){ txt.style.opacity=1; txt.style.transform='translateY(0)'; txt.style.transition='opacity 1s, transform 1s'; }
+
+          // linger: shorter for first two (flashback), longer for monologue panels
+          const linger = (i < 2) ? 2400 : (i >= panels.length-2 ? 5200 : 3800);
+          await wait(linger);
+
+          // fade current voice a little when panel ends
+          if(currentVoice && !currentVoice.paused){ try{ currentVoice.pause(); }catch(e){} }
+
+          if(txt) txt.style.opacity=0; if(img) img.style.transform='scale(1)'; await wait(500);
+        }
+
+        // finish
+        if(lbTop) lbTop.classList.remove('show'); if(lbBottom) lbBottom.classList.remove('show');
+        if(cutscene){ cutscene.style.transition='opacity .9s ease'; cutscene.style.opacity=0; }
+
+        setTimeout(()=>{
+          if(cutscene) cutscene.style.display='none';
+          // show letter modal, play separate voiceover if any, start slideshow and handwriting
+          if(letterModal){
+            letterModal.style.display='flex';
+            const card = letterModal.querySelector('.card');
+            if(card){ card.style.transform='scale(0.9)'; card.style.opacity='0'; card.style.transition='transform 900ms cubic-bezier(.2,.9,.2,1), opacity 900ms ease'; requestAnimationFrame(()=>{ card.style.transform='scale(1)'; card.style.opacity='1'; }); }
+
+            // spawn sakura
+            spawnSakura(12);
+
+            // voiceover (global) can be played here if needed (placeholder omitted)
+            // animate handwriting
+            animateHandwriting('Aku cuma mau bilang: Kamu adalah tempat pulangku. Setiap hari bareng kamu adalah hadiah.');
+
+            // start slideshow with default images (replace with your own URLs)
+            initSlideshow([
+              'https://picsum.photos/900/600?random=21',
+              'https://picsum.photos/900/600?random=34',
+              'https://picsum.photos/900/600?random=12'
+            ]);
+
+            // play post-cutscene song if available and user interacted
+            if(postSong){ try{ postSong.play().catch(()=>{}); }catch(e){} }
+          }
+        },900);
       }
 
-      // finalize
-      if(lbTop) lbTop.classList.remove('show'); if(lbBottom) lbBottom.classList.remove('show');
-      if(cutscene){ cutscene.style.transition='opacity .9s ease'; cutscene.style.opacity=0; }
+      // safe hookups
+      if(startBtn) startBtn.addEventListener('click', ()=>{ playCutscene().catch(()=>{}); });
+      function startAny(){ if(cutscene && cutscene.style.display !== 'none'){ if(startBtn) startBtn.click(); window.removeEventListener('click', startAny); } }
+      window.addEventListener('click', startAny);
 
-      setTimeout(()=>{
-        if(cutscene) cutscene.style.display='none';
-        // open letter + play voiceover + show slideshow
-        if(letterModal){
-          letterModal.style.display='flex';
-          const card = letterModal.querySelector('.card');
-          if(card){ card.style.transform='scale(0.9)'; card.style.opacity='0'; card.style.transition='transform 900ms cubic-bezier(.2,.9,.2,1), opacity 900ms ease'; requestAnimationFrame(()=>{ card.style.transform='scale(1)'; card.style.opacity='1'; });
-          }
-          // play voiceover after short delay
-          if(voiceover){ setTimeout(()=>{ voiceover.play().catch(()=>{}); },700); }
+      if(closeLetter) closeLetter.addEventListener('click', ()=>{ if(letterModal) letterModal.style.display='none'; if(window.currentVoice){ try{ window.currentVoice.pause(); window.currentVoice.src=''; }catch(e){} } if(typeof sTimer !== 'undefined' && sTimer) clearInterval(sTimer); });
 
-          // reveal handwriting text with animation
-          animateHandwriting("Aku cuma mau bilang: Kamu adalah tempat pulangku. Setiap hari bareng kamu adalah hadiah.");
+      // spacebar toggles music
+      window.addEventListener('keydown', e=>{ if(e.key === ' '){ if(music){ if(music.paused) music.play(); else music.pause(); } } });
 
-          // initialize slideshow images & controls
-          initSlideshow([
-            'https://picsum.photos/900/600?random=21',
-            'https://picsum.photos/900/600?random=34',
-            'https://picsum.photos/900/600?random=12'
-          ]);
-        }
-      },900);
+    }catch(err){
+      console.error('Init error', err);
+      // show a simple fallback message overlay so the user sees something
+      const msg = document.createElement('div'); msg.style.position='fixed'; msg.style.inset='0'; msg.style.display='flex'; msg.style.alignItems='center'; msg.style.justifyContent='center'; msg.style.background='rgba(0,0,0,0.7)'; msg.style.zIndex=20000; msg.style.color='white'; msg.style.padding='20px'; msg.innerText = 'Terjadi error saat menjalankan halaman. Cek console untuk detail.'; document.body.appendChild(msg);
     }
-
-    // handwriting reveal (staggered letters with slight rotation) simulating handwriting
-    function animateHandwriting(text){ if(!handwriting) return; handwriting.innerHTML=''; const chars = Array.from(text); chars.forEach((ch, i)=>{ const span = document.createElement('span'); span.innerText = ch; handwriting.appendChild(span); setTimeout(()=>{ span.style.transition='opacity 350ms ease, transform 350ms cubic-bezier(.2,.9,.2,1)'; span.style.opacity='1'; span.style.transform='translateY(0) rotate(0deg)'; }, 40*i + Math.random()*40); }); }
-
-    // slideshow
-    let slides = []; let sIndex = 0; let sTimer = null;
-    function initSlideshow(arr){ slides = arr.slice(); if(!slideImg) return; slideImg.src = slides[0]; slideshow.style.display='block'; slideControls.style.display='flex'; sIndex = 0; if(sTimer) clearInterval(sTimer); sTimer = setInterval(()=>{ nextSlideFn(); }, 3000); }
-    function showSlide(i){ if(!slideImg) return; sIndex = (i + slides.length) % slides.length; slideImg.src = slides[sIndex]; }
-    function nextSlideFn(){ showSlide(sIndex+1); }
-    function prevSlideFn(){ showSlide(sIndex-1); }
-    if(nextSlide) nextSlide.addEventListener('click', ()=>{ nextSlideFn(); if(sTimer){ clearInterval(sTimer); sTimer = setInterval(()=> nextSlideFn(), 3000); } });
-    if(prevSlide) prevSlide.addEventListener('click', ()=>{ prevSlideFn(); if(sTimer){ clearInterval(sTimer); sTimer = setInterval(()=> nextSlideFn(), 3000); } });
-
-    // mute button
-    if(muteBtn){ muteBtn.addEventListener('click', ()=>{ if(music){ if(music.paused){ music.play(); muteBtn.innerText='Mute'; } else { music.pause(); muteBtn.innerText='Play'; } } }); }
-
-    // safe event hookups
-    if(startBtn) startBtn.addEventListener('click', ()=>{ playCutscene().catch(()=>{}); });
-    function startAny(){ if(cutscene && cutscene.style.display !== 'none'){ if(startBtn) startBtn.click(); window.removeEventListener('click', startAny); } }
-    window.addEventListener('click', startAny);
-
-    if(closeLetter) closeLetter.addEventListener('click', ()=>{ letterModal.style.display='none'; if(voiceover){ voiceover.pause(); voiceover.currentTime = 0; } if(sTimer) clearInterval(sTimer); });
-
-    // spacebar toggles music
-    window.addEventListener('keydown', e=>{ if(e.key === ' '){ if(music){ if(music.paused) music.play(); else music.pause(); } } });
-
+  });
   </script>
 </body>
 </html>
